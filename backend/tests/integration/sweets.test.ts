@@ -262,5 +262,66 @@ describe('Sweets API', () => {
       expect(response.body.sweets).toHaveLength(0);
     });
   });
+
+  describe('PUT /api/sweets/:id', () => {
+    let sweetId: string;
+
+    beforeEach(async () => {
+      const createResponse = await request(app)
+        .post('/api/sweets')
+        .set('Authorization', `Bearer ${authToken}`)
+        .send({
+          name: 'Chocolate Truffle',
+          description: 'Delicious chocolate truffle',
+          price: 5.99,
+          category: 'Chocolate',
+          quantity: 100
+        });
+      sweetId = createResponse.body.sweet._id;
+    });
+
+    it('should return 401 without authentication', async () => {
+      const response = await request(app)
+        .put(`/api/sweets/${sweetId}`)
+        .send({ name: 'Updated Name' });
+
+      expect(response.status).toBe(401);
+    });
+
+    it('should return 404 when sweet does not exist', async () => {
+      const fakeId = '507f1f77bcf86cd799439011';
+      const response = await request(app)
+        .put(`/api/sweets/${fakeId}`)
+        .set('Authorization', `Bearer ${authToken}`)
+        .send({ name: 'Updated Name' });
+
+      expect(response.status).toBe(404);
+    });
+
+    it('should update sweet and return updated object', async () => {
+      const response = await request(app)
+        .put(`/api/sweets/${sweetId}`)
+        .set('Authorization', `Bearer ${authToken}`)
+        .send({
+          name: 'Updated Chocolate Truffle',
+          price: 6.99
+        });
+
+      expect(response.status).toBe(200);
+      expect(response.body.sweet).toBeDefined();
+      expect(response.body.sweet.name).toBe('Updated Chocolate Truffle');
+      expect(response.body.sweet.price).toBe(6.99);
+      expect(response.body.sweet.description).toBe('Delicious chocolate truffle');
+    });
+
+    it('should return 400 when updating with invalid price', async () => {
+      const response = await request(app)
+        .put(`/api/sweets/${sweetId}`)
+        .set('Authorization', `Bearer ${authToken}`)
+        .send({ price: -5 });
+
+      expect(response.status).toBe(400);
+    });
+  });
 });
 
