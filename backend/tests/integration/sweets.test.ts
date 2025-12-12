@@ -476,5 +476,97 @@ describe('Sweets API', () => {
       expect(response.body.message).toContain('Insufficient');
     });
   });
+
+  describe('POST /api/sweets/:id/restock', () => {
+    let sweetId: string;
+    let adminToken: string;
+
+    beforeEach(async () => {
+      const createResponse = await request(app)
+        .post('/api/sweets')
+        .set('Authorization', `Bearer ${authToken}`)
+        .send({
+          name: 'Chocolate Truffle',
+          description: 'Delicious chocolate truffle',
+          price: 5.99,
+          category: 'Chocolate',
+          quantity: 10
+        });
+      sweetId = createResponse.body.sweet._id;
+
+      const adminRegister = await request(app)
+        .post('/api/auth/register')
+        .send({
+          email: 'restockadmin@example.com',
+          password: 'password123',
+          name: 'Restock Admin'
+        });
+
+      await User.findByIdAndUpdate(adminRegister.body.user._id, { role: 'admin' });
+
+      const adminLogin = await request(app)
+        .post('/api/auth/login')
+        .send({
+          email: 'restockadmin@example.com',
+          password: 'password123'
+        });
+      adminToken = adminLogin.body.token;
+    });
+
+    it('should return 401 without authentication', async () => {
+      const response = await request(app)
+        .post(`/api/sweets/${sweetId}/restock`)
+        .send({ quantity: 50 });
+
+      expect(response.status).toBe(401);
+    });
+
+    it('should return 403 for non-admin users', async () => {
+      const response = await request(app)
+        .post(`/api/sweets/${sweetId}/restock`)
+        .set('Authorization', `Bearer ${authToken}`)
+        .send({ quantity: 50 });
+
+      expect(response.status).toBe(403);
+    });
+
+    it('should increase quantity for admin users', async () => {
+      const response = await request(app)
+        .post(`/api/sweets/${sweetId}/restock`)
+        .set('Authorization', `Bearer ${adminToken}`)
+        .send({ quantity: 50 });
+
+      expect(response.status).toBe(200);
+      expect(response.body.sweet.quantity).toBe(60);
+    });
+
+    it('should return 404 when sweet does not exist', async () => {
+      const fakeId = '507f1f77bcf86cd799439011';
+      const response = await request(app)
+        .post(`/api/sweets/${fakeId}/restock`)
+        .set('Authorization', `Bearer ${adminToken}`)
+        .send({ quantity: 50 });
+
+      expect(response.status).toBe(404);
+    });
+
+    it('should return 400 when quantity is not provided', async () => {
+      const response = await request(app)
+        .post(`/api/sweets/${sweetId}/restock`)
+        .set('Authorization', `Bearer ${adminToken}`)
+        .send({});
+
+      expect(response.status).toBe(400);
+    });
+
+    it('should return 400 when quantity is negative', async () => {
+      const response = await request(app)
+        .post(`/api/sweets/${sweetId}/restock`)
+        .set('Authorization', `Bearer ${adminToken}`)
+        .send({ quantity: -10 });
+
+      expect(response.status).toBe(400);
+    });
+  });
 });
 
