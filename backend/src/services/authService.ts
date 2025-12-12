@@ -1,6 +1,7 @@
 import bcrypt from 'bcryptjs';
 import jwt, { SignOptions } from 'jsonwebtoken';
-import User, { IUser } from '../models/User';
+import { IUser } from '../models/User';
+import * as userRepository from '../repositories/userRepository';
 
 export interface RegisterData {
   email: string;
@@ -19,7 +20,7 @@ export interface AuthResult {
 }
 
 export const registerUser = async (data: RegisterData): Promise<AuthResult> => {
-  const existingUser = await User.findOne({ email: data.email.toLowerCase() });
+  const existingUser = await userRepository.findByEmail(data.email);
   if (existingUser) {
     const error = new Error('Email already exists') as Error & { statusCode: number };
     error.statusCode = 409;
@@ -29,13 +30,11 @@ export const registerUser = async (data: RegisterData): Promise<AuthResult> => {
   const salt = await bcrypt.genSalt(10);
   const hashedPassword = await bcrypt.hash(data.password, salt);
 
-  const user = new User({
-    email: data.email.toLowerCase(),
+  const user = await userRepository.create({
+    email: data.email,
     password: hashedPassword,
     name: data.name
   });
-
-  await user.save();
 
   const token = generateToken(user);
 
