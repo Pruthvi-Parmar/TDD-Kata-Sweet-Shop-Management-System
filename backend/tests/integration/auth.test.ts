@@ -1,0 +1,84 @@
+import request from 'supertest';
+import mongoose from 'mongoose';
+import app from '../../src/app';
+import User from '../../src/models/User';
+
+describe('Auth API', () => {
+  beforeAll(async () => {
+    const mongoUri = process.env.MONGODB_URI || 'mongodb+srv://ppruthviraj254:KNjFoY2LGTveUzYv@cluster0.dgypi.mongodb.net/incusweettdd_test';
+    await mongoose.connect(mongoUri);
+  });
+
+  afterAll(async () => {
+    await mongoose.connection.close();
+  });
+
+  beforeEach(async () => {
+    await User.deleteMany({});
+  });
+
+  describe('POST /api/auth/register', () => {
+    it('should return 400 when email is missing', async () => {
+      const response = await request(app)
+        .post('/api/auth/register')
+        .send({
+          password: 'password123',
+          name: 'Test User'
+        });
+
+      expect(response.status).toBe(400);
+      expect(response.body.errors).toBeDefined();
+    });
+
+    it('should return 400 when password is missing', async () => {
+      const response = await request(app)
+        .post('/api/auth/register')
+        .send({
+          email: 'test@example.com',
+          name: 'Test User'
+        });
+
+      expect(response.status).toBe(400);
+      expect(response.body.errors).toBeDefined();
+    });
+
+    it('should return 400 when name is missing', async () => {
+      const response = await request(app)
+        .post('/api/auth/register')
+        .send({
+          email: 'test@example.com',
+          password: 'password123'
+        });
+
+      expect(response.status).toBe(400);
+      expect(response.body.errors).toBeDefined();
+    });
+
+    it('should return 400 when email format is invalid', async () => {
+      const response = await request(app)
+        .post('/api/auth/register')
+        .send({
+          email: 'invalid-email',
+          password: 'password123',
+          name: 'Test User'
+        });
+
+      expect(response.status).toBe(400);
+      expect(response.body.errors).toBeDefined();
+    });
+
+    it('should return 400 when password is too short', async () => {
+      const response = await request(app)
+        .post('/api/auth/register')
+        .send({
+          email: 'test@example.com',
+          password: '12345',
+          name: 'Test User'
+        });
+
+      expect(response.status).toBe(400);
+      expect(response.body.errors).toBeDefined();
+    });
+  });
+});
+
