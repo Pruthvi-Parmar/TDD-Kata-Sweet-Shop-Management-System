@@ -402,5 +402,79 @@ describe('Sweets API', () => {
       expect(getResponse.status).toBe(404);
     });
   });
+
+  describe('POST /api/sweets/:id/purchase', () => {
+    let sweetId: string;
+
+    beforeEach(async () => {
+      const createResponse = await request(app)
+        .post('/api/sweets')
+        .set('Authorization', `Bearer ${authToken}`)
+        .send({
+          name: 'Chocolate Truffle',
+          description: 'Delicious chocolate truffle',
+          price: 5.99,
+          category: 'Chocolate',
+          quantity: 10
+        });
+      sweetId = createResponse.body.sweet._id;
+    });
+
+    it('should return 401 without authentication', async () => {
+      const response = await request(app)
+        .post(`/api/sweets/${sweetId}/purchase`);
+
+      expect(response.status).toBe(401);
+    });
+
+    it('should decrease quantity by 1 on purchase', async () => {
+      const response = await request(app)
+        .post(`/api/sweets/${sweetId}/purchase`)
+        .set('Authorization', `Bearer ${authToken}`);
+
+      expect(response.status).toBe(200);
+      expect(response.body.sweet.quantity).toBe(9);
+    });
+
+    it('should return 404 when sweet does not exist', async () => {
+      const fakeId = '507f1f77bcf86cd799439011';
+      const response = await request(app)
+        .post(`/api/sweets/${fakeId}/purchase`)
+        .set('Authorization', `Bearer ${authToken}`);
+
+      expect(response.status).toBe(404);
+    });
+
+    it('should return 400 when sweet is out of stock', async () => {
+      await Sweet.findByIdAndUpdate(sweetId, { quantity: 0 });
+
+      const response = await request(app)
+        .post(`/api/sweets/${sweetId}/purchase`)
+        .set('Authorization', `Bearer ${authToken}`);
+
+      expect(response.status).toBe(400);
+      expect(response.body.message).toContain('out of stock');
+    });
+
+    it('should decrease quantity by specified amount', async () => {
+      const response = await request(app)
+        .post(`/api/sweets/${sweetId}/purchase`)
+        .set('Authorization', `Bearer ${authToken}`)
+        .send({ quantity: 3 });
+
+      expect(response.status).toBe(200);
+      expect(response.body.sweet.quantity).toBe(7);
+    });
+
+    it('should return 400 when requested quantity exceeds stock', async () => {
+      const response = await request(app)
+        .post(`/api/sweets/${sweetId}/purchase`)
+        .set('Authorization', `Bearer ${authToken}`)
+        .send({ quantity: 15 });
+
+      expect(response.status).toBe(400);
+      expect(response.body.message).toContain('Insufficient');
+    });
+  });
 });
 
