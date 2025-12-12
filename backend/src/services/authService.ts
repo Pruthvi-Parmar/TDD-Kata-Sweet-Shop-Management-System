@@ -49,6 +49,39 @@ export const registerUser = async (data: RegisterData): Promise<AuthResult> => {
   };
 };
 
+export interface LoginData {
+  email: string;
+  password: string;
+}
+
+export const loginUser = async (data: LoginData): Promise<AuthResult> => {
+  const user = await userRepository.findByEmail(data.email);
+  if (!user) {
+    const error = new Error('Invalid credentials') as Error & { statusCode: number };
+    error.statusCode = 401;
+    throw error;
+  }
+
+  const isPasswordValid = await bcrypt.compare(data.password, user.password);
+  if (!isPasswordValid) {
+    const error = new Error('Invalid credentials') as Error & { statusCode: number };
+    error.statusCode = 401;
+    throw error;
+  }
+
+  const token = generateToken(user);
+
+  return {
+    user: {
+      _id: user._id.toString(),
+      email: user.email,
+      name: user.name,
+      role: user.role
+    },
+    token
+  };
+};
+
 export const generateToken = (user: IUser): string => {
   const secret = process.env.JWT_SECRET || 'default-secret';
   const options: SignOptions = {

@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { registerUser } from '../services/authService';
+import { registerUser, loginUser } from '../services/authService';
 
 export const register = async (req: Request, res: Response): Promise<void> => {
   try {
@@ -14,5 +14,13 @@ export const register = async (req: Request, res: Response): Promise<void> => {
 };
 
 export const login = async (req: Request, res: Response): Promise<void> => {
-  res.status(200).json({ message: 'Login successful' });
+  try {
+    const { email, password } = req.body;
+    const result = await loginUser({ email, password });
+    res.status(200).json(result);
+  } catch (error) {
+    const err = error as Error & { statusCode?: number };
+    const statusCode = err.statusCode || 500;
+    res.status(statusCode).json({ message: err.message });
+  }
 };
