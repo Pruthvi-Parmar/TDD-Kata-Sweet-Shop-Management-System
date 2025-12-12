@@ -61,6 +61,72 @@ describe('Sweets API', () => {
       expect(response.status).toBe(401);
       expect(response.body.message).toBeDefined();
     });
+
+    it('should return 400 when required fields are missing', async () => {
+      const response = await request(app)
+        .post('/api/sweets')
+        .set('Authorization', `Bearer ${authToken}`)
+        .send({
+          name: 'Chocolate Truffle'
+        });
+
+      expect(response.status).toBe(400);
+      expect(response.body.errors).toBeDefined();
+    });
+
+    it('should return 201 and created sweet on successful creation', async () => {
+      const response = await request(app)
+        .post('/api/sweets')
+        .set('Authorization', `Bearer ${authToken}`)
+        .send({
+          name: 'Chocolate Truffle',
+          description: 'Delicious chocolate truffle',
+          price: 5.99,
+          category: 'Chocolate',
+          quantity: 100
+        });
+
+      expect(response.status).toBe(201);
+      expect(response.body.sweet).toBeDefined();
+      expect(response.body.sweet.name).toBe('Chocolate Truffle');
+      expect(response.body.sweet.description).toBe('Delicious chocolate truffle');
+      expect(response.body.sweet.price).toBe(5.99);
+      expect(response.body.sweet.category).toBe('Chocolate');
+      expect(response.body.sweet.quantity).toBe(100);
+      expect(response.body.sweet._id).toBeDefined();
+    });
+
+    it('should return 400 when price is negative', async () => {
+      const response = await request(app)
+        .post('/api/sweets')
+        .set('Authorization', `Bearer ${authToken}`)
+        .send({
+          name: 'Chocolate Truffle',
+          description: 'Delicious chocolate truffle',
+          price: -5.99,
+          category: 'Chocolate',
+          quantity: 100
+        });
+
+      expect(response.status).toBe(400);
+      expect(response.body.errors).toBeDefined();
+    });
+
+    it('should return 400 when quantity is negative', async () => {
+      const response = await request(app)
+        .post('/api/sweets')
+        .set('Authorization', `Bearer ${authToken}`)
+        .send({
+          name: 'Chocolate Truffle',
+          description: 'Delicious chocolate truffle',
+          price: 5.99,
+          category: 'Chocolate',
+          quantity: -10
+        });
+
+      expect(response.status).toBe(400);
+      expect(response.body.errors).toBeDefined();
+    });
   });
 });
 
