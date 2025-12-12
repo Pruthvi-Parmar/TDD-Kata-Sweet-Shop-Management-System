@@ -173,6 +173,52 @@ describe('Auth API', () => {
       expect(response.status).toBe(401);
       expect(response.body.message).toBeDefined();
     });
+
+    it('should return 200 with JWT token on successful login', async () => {
+      await request(app)
+        .post('/api/auth/register')
+        .send({
+          email: 'test@example.com',
+          password: 'password123',
+          name: 'Test User'
+        });
+
+      const response = await request(app)
+        .post('/api/auth/login')
+        .send({
+          email: 'test@example.com',
+          password: 'password123'
+        });
+
+      expect(response.status).toBe(200);
+      expect(response.body.token).toBeDefined();
+      expect(response.body.user).toBeDefined();
+      expect(response.body.user.email).toBe('test@example.com');
+      expect(response.body.user.name).toBe('Test User');
+      expect(response.body.user.password).toBeUndefined();
+    });
+
+    it('should return valid JWT token that can be decoded', async () => {
+      await request(app)
+        .post('/api/auth/register')
+        .send({
+          email: 'test@example.com',
+          password: 'password123',
+          name: 'Test User'
+        });
+
+      const response = await request(app)
+        .post('/api/auth/login')
+        .send({
+          email: 'test@example.com',
+          password: 'password123'
+        });
+
+      const token = response.body.token;
+      expect(token).toBeDefined();
+      expect(typeof token).toBe('string');
+      expect(token.split('.')).toHaveLength(3);
+    });
   });
 });
 
