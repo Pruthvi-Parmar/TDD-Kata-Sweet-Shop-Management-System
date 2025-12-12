@@ -177,5 +177,90 @@ describe('Sweets API', () => {
       expect(response.status).toBe(200);
     });
   });
+
+  describe('GET /api/sweets/search', () => {
+    beforeEach(async () => {
+      await request(app)
+        .post('/api/sweets')
+        .set('Authorization', `Bearer ${authToken}`)
+        .send({
+          name: 'Chocolate Truffle',
+          description: 'Delicious chocolate truffle',
+          price: 5.99,
+          category: 'Chocolate',
+          quantity: 100
+        });
+
+      await request(app)
+        .post('/api/sweets')
+        .set('Authorization', `Bearer ${authToken}`)
+        .send({
+          name: 'Vanilla Fudge',
+          description: 'Creamy vanilla fudge',
+          price: 4.99,
+          category: 'Fudge',
+          quantity: 50
+        });
+
+      await request(app)
+        .post('/api/sweets')
+        .set('Authorization', `Bearer ${authToken}`)
+        .send({
+          name: 'Dark Chocolate Bar',
+          description: 'Rich dark chocolate',
+          price: 7.99,
+          category: 'Chocolate',
+          quantity: 75
+        });
+    });
+
+    it('should filter sweets by name', async () => {
+      const response = await request(app)
+        .get('/api/sweets/search')
+        .query({ name: 'Chocolate' });
+
+      expect(response.status).toBe(200);
+      expect(response.body.sweets).toHaveLength(2);
+    });
+
+    it('should filter sweets by category', async () => {
+      const response = await request(app)
+        .get('/api/sweets/search')
+        .query({ category: 'Fudge' });
+
+      expect(response.status).toBe(200);
+      expect(response.body.sweets).toHaveLength(1);
+      expect(response.body.sweets[0].name).toBe('Vanilla Fudge');
+    });
+
+    it('should filter sweets by price range', async () => {
+      const response = await request(app)
+        .get('/api/sweets/search')
+        .query({ minPrice: 5, maxPrice: 6 });
+
+      expect(response.status).toBe(200);
+      expect(response.body.sweets).toHaveLength(1);
+      expect(response.body.sweets[0].name).toBe('Chocolate Truffle');
+    });
+
+    it('should combine multiple filters', async () => {
+      const response = await request(app)
+        .get('/api/sweets/search')
+        .query({ category: 'Chocolate', maxPrice: 6 });
+
+      expect(response.status).toBe(200);
+      expect(response.body.sweets).toHaveLength(1);
+      expect(response.body.sweets[0].name).toBe('Chocolate Truffle');
+    });
+
+    it('should return empty array when no matches found', async () => {
+      const response = await request(app)
+        .get('/api/sweets/search')
+        .query({ name: 'NonExistent' });
+
+      expect(response.status).toBe(200);
+      expect(response.body.sweets).toHaveLength(0);
+    });
+  });
 });
 
