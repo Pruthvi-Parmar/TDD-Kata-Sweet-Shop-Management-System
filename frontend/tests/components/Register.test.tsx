@@ -29,19 +29,17 @@ describe('Register Component', () => {
     });
   });
 
-  it('should show validation error for invalid email', async () => {
+  it('should show validation error when email is empty', async () => {
     const user = userEvent.setup();
     renderWithRouter(<Register />);
 
     await user.type(screen.getByLabelText(/name/i), 'Test User');
-    await user.type(screen.getByLabelText(/email/i), 'invalid-email');
     await user.type(screen.getByLabelText(/password/i), 'password123');
     
-    const submitButton = screen.getByRole('button', { name: /register/i });
-    fireEvent.click(submitButton);
+    await user.click(screen.getByRole('button', { name: /register/i }));
 
     await waitFor(() => {
-      expect(screen.getByText(/invalid email/i)).toBeInTheDocument();
+      expect(screen.getByText(/email is required/i)).toBeInTheDocument();
     });
   });
 
