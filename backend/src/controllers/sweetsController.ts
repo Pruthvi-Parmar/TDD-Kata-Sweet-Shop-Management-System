@@ -92,3 +92,33 @@ export const searchSweets = async (req: AuthRequest, res: Response): Promise<voi
     res.status(statusCode).json({ message: err.message });
   }
 };
+
+export const purchaseSweet = async (req: AuthRequest, res: Response): Promise<void> => {
+  try {
+    const { id } = req.params;
+    const quantity = req.body?.quantity ?? 1;
+    const sweet = await sweetService.purchaseSweet(id, quantity);
+    res.status(200).json({ sweet });
+  } catch (error) {
+    const err = error as Error & { statusCode?: number };
+    const statusCode = err.statusCode || 500;
+    res.status(statusCode).json({ message: err.message });
+  }
+};
+
+export const restockSweet = async (req: AuthRequest, res: Response): Promise<void> => {
+  try {
+    const { id } = req.params;
+    const { quantity } = req.body;
+    if (!quantity || quantity <= 0) {
+      res.status(400).json({ message: 'Quantity must be a positive number' });
+      return;
+    }
+    const sweet = await sweetService.restockSweet(id, quantity);
+    res.status(200).json({ sweet });
+  } catch (error) {
+    const err = error as Error & { statusCode?: number };
+    const statusCode = err.statusCode || 500;
+    res.status(statusCode).json({ message: err.message });
+  }
+};

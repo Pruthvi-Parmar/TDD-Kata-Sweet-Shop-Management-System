@@ -67,3 +67,45 @@ export const searchSweets = async (params: SearchParams): Promise<ISweet[]> => {
   return sweetRepository.search(params);
 };
 
+export const purchaseSweet = async (id: string, quantity: number = 1): Promise<ISweet> => {
+  const sweet = await sweetRepository.findById(id);
+  if (!sweet) {
+    const error = new Error('Sweet not found') as Error & { statusCode: number };
+    error.statusCode = 404;
+    throw error;
+  }
+
+  if (sweet.quantity === 0) {
+    const error = new Error('Sweet is out of stock') as Error & { statusCode: number };
+    error.statusCode = 400;
+    throw error;
+  }
+
+  if (sweet.quantity < quantity) {
+    const error = new Error('Insufficient stock available') as Error & { statusCode: number };
+    error.statusCode = 400;
+    throw error;
+  }
+
+  const updatedSweet = await sweetRepository.update(id, {
+    quantity: sweet.quantity - quantity
+  });
+
+  return updatedSweet!;
+};
+
+export const restockSweet = async (id: string, quantity: number): Promise<ISweet> => {
+  const sweet = await sweetRepository.findById(id);
+  if (!sweet) {
+    const error = new Error('Sweet not found') as Error & { statusCode: number };
+    error.statusCode = 404;
+    throw error;
+  }
+
+  const updatedSweet = await sweetRepository.update(id, {
+    quantity: sweet.quantity + quantity
+  });
+
+  return updatedSweet!;
+};
+
