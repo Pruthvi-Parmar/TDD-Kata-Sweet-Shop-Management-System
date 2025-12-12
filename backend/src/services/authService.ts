@@ -1,12 +1,16 @@
 import bcrypt from 'bcryptjs';
-import jwt, { SignOptions } from 'jsonwebtoken';
-import { IUser } from '../models/User';
 import * as userRepository from '../repositories/userRepository';
+import { generateToken } from '../utils/jwt';
 
 export interface RegisterData {
   email: string;
   password: string;
   name: string;
+}
+
+export interface LoginData {
+  email: string;
+  password: string;
 }
 
 export interface AuthResult {
@@ -36,7 +40,11 @@ export const registerUser = async (data: RegisterData): Promise<AuthResult> => {
     name: data.name
   });
 
-  const token = generateToken(user);
+  const token = generateToken({
+    userId: user._id.toString(),
+    email: user.email,
+    role: user.role
+  });
 
   return {
     user: {
@@ -48,11 +56,6 @@ export const registerUser = async (data: RegisterData): Promise<AuthResult> => {
     token
   };
 };
-
-export interface LoginData {
-  email: string;
-  password: string;
-}
 
 export const loginUser = async (data: LoginData): Promise<AuthResult> => {
   const user = await userRepository.findByEmail(data.email);
@@ -69,7 +72,11 @@ export const loginUser = async (data: LoginData): Promise<AuthResult> => {
     throw error;
   }
 
-  const token = generateToken(user);
+  const token = generateToken({
+    userId: user._id.toString(),
+    email: user.email,
+    role: user.role
+  });
 
   return {
     user: {
@@ -80,16 +87,4 @@ export const loginUser = async (data: LoginData): Promise<AuthResult> => {
     },
     token
   };
-};
-
-export const generateToken = (user: IUser): string => {
-  const secret = process.env.JWT_SECRET || 'default-secret';
-  const options: SignOptions = {
-    expiresIn: '7d'
-  };
-  return jwt.sign(
-    { userId: user._id, email: user.email, role: user.role },
-    secret,
-    options
-  );
 };
