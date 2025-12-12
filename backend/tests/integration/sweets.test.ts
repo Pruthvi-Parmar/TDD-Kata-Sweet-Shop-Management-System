@@ -128,5 +128,54 @@ describe('Sweets API', () => {
       expect(response.body.errors).toBeDefined();
     });
   });
+
+  describe('GET /api/sweets', () => {
+    it('should return empty array when no sweets exist', async () => {
+      const response = await request(app)
+        .get('/api/sweets');
+
+      expect(response.status).toBe(200);
+      expect(response.body.sweets).toBeDefined();
+      expect(response.body.sweets).toEqual([]);
+    });
+
+    it('should return array of all sweets', async () => {
+      await request(app)
+        .post('/api/sweets')
+        .set('Authorization', `Bearer ${authToken}`)
+        .send({
+          name: 'Chocolate Truffle',
+          description: 'Delicious chocolate truffle',
+          price: 5.99,
+          category: 'Chocolate',
+          quantity: 100
+        });
+
+      await request(app)
+        .post('/api/sweets')
+        .set('Authorization', `Bearer ${authToken}`)
+        .send({
+          name: 'Vanilla Fudge',
+          description: 'Creamy vanilla fudge',
+          price: 4.99,
+          category: 'Fudge',
+          quantity: 50
+        });
+
+      const response = await request(app)
+        .get('/api/sweets');
+
+      expect(response.status).toBe(200);
+      expect(response.body.sweets).toBeDefined();
+      expect(response.body.sweets).toHaveLength(2);
+    });
+
+    it('should not require authentication', async () => {
+      const response = await request(app)
+        .get('/api/sweets');
+
+      expect(response.status).toBe(200);
+    });
+  });
 });
 
