@@ -118,5 +118,61 @@ describe('Auth API', () => {
       expect(response.body.message).toBeDefined();
     });
   });
+
+  describe('POST /api/auth/login', () => {
+    it('should return 400 when email is missing', async () => {
+      const response = await request(app)
+        .post('/api/auth/login')
+        .send({
+          password: 'password123'
+        });
+
+      expect(response.status).toBe(400);
+      expect(response.body.errors).toBeDefined();
+    });
+
+    it('should return 400 when password is missing', async () => {
+      const response = await request(app)
+        .post('/api/auth/login')
+        .send({
+          email: 'test@example.com'
+        });
+
+      expect(response.status).toBe(400);
+      expect(response.body.errors).toBeDefined();
+    });
+
+    it('should return 401 when user does not exist', async () => {
+      const response = await request(app)
+        .post('/api/auth/login')
+        .send({
+          email: 'nonexistent@example.com',
+          password: 'password123'
+        });
+
+      expect(response.status).toBe(401);
+      expect(response.body.message).toBeDefined();
+    });
+
+    it('should return 401 when password is incorrect', async () => {
+      await request(app)
+        .post('/api/auth/register')
+        .send({
+          email: 'test@example.com',
+          password: 'password123',
+          name: 'Test User'
+        });
+
+      const response = await request(app)
+        .post('/api/auth/login')
+        .send({
+          email: 'test@example.com',
+          password: 'wrongpassword'
+        });
+
+      expect(response.status).toBe(401);
+      expect(response.body.message).toBeDefined();
+    });
+  });
 });
 
