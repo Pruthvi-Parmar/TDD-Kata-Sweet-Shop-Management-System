@@ -323,5 +323,84 @@ describe('Sweets API', () => {
       expect(response.status).toBe(400);
     });
   });
+
+  describe('DELETE /api/sweets/:id', () => {
+    let sweetId: string;
+    let adminToken: string;
+
+    beforeEach(async () => {
+      const createResponse = await request(app)
+        .post('/api/sweets')
+        .set('Authorization', `Bearer ${authToken}`)
+        .send({
+          name: 'Chocolate Truffle',
+          description: 'Delicious chocolate truffle',
+          price: 5.99,
+          category: 'Chocolate',
+          quantity: 100
+        });
+      sweetId = createResponse.body.sweet._id;
+
+      await User.findOneAndUpdate(
+        { email: 'admin@example.com' },
+        { email: 'admin@example.com', password: 'hashedpassword', name: 'Admin', role: 'admin' },
+        { upsert: true }
+      );
+
+      const adminRegister = await request(app)
+        .post('/api/auth/register')
+        .send({
+          email: 'adminuser@example.com',
+          password: 'password123',
+          name: 'Admin User'
+        });
+
+      await User.findByIdAndUpdate(adminRegister.body.user._id, { role: 'admin' });
+
+      const adminLogin = await request(app)
+        .post('/api/auth/login')
+        .send({
+          email: 'adminuser@example.com',
+          password: 'password123'
+        });
+      adminToken = adminLogin.body.token;
+    });
+
+    it('should return 401 without authentication', async () => {
+      const response = await request(app)
+        .delete(`/api/sweets/${sweetId}`);
+
+      expect(response.status).toBe(401);
+    });
+
+    it('should return 403 for non-admin users', async () => {
+      const response = await request(app)
+        .delete(`/api/sweets/${sweetId}`)
+        .set('Authorization', `Bearer ${authToken}`);
+
+      expect(response.status).toBe(403);
+    });
+
+    it('should return 404 when sweet does not exist', async () => {
+      const fakeId = '507f1f77bcf86cd799439011';
+      const response = await request(app)
+        .delete(`/api/sweets/${fakeId}`)
+        .set('Authorization', `Bearer ${adminToken}`);
+
+      expect(response.status).toBe(404);
+    });
+
+    it('should delete sweet successfully for admin users', async () => {
+      const response = await request(app)
+        .delete(`/api/sweets/${sweetId}`)
+        .set('Authorization', `Bearer ${adminToken}`);
+
+      expect(response.status).toBe(200);
+
+      const getResponse = await request(app)
+        .get(`/api/sweets/${sweetId}`);
+      expect(getResponse.status).toBe(404);
+    });
+  });
 });
 
