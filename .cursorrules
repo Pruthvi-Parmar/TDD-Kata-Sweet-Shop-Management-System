@@ -1,0 +1,48 @@
+When Writing Tests:
+"Write a failing Jest test for [specific functionality].
+The test should check [specific behavior].
+Follow AAA pattern (Arrange, Act, Assert).
+Use descriptive test names in the format: 'should [expected behavior] when [condition]'"
+When Implementing Features:
+"Implement the minimal code needed to make the failing test pass.
+Focus only on making this specific test green.
+Do not add extra features or handle edge cases not covered by the test."
+When Refactoring:
+"Refactor the [component/function] to improve [specific aspect].
+Ensure all tests remain green.
+Follow SOLID principles and maintain code readability."
+For Database Operations:
+"Create a database migration/schema for [entity].
+Include proper constraints, indexes, and relationships.
+Use TypeScript types that match the database schema."
+
+📊 TESTING REQUIREMENTS
+Backend Test Coverage:
+
+Unit Tests: All services, utilities, middleware (80%+ coverage)
+Integration Tests: All API endpoints with database interaction
+Test Scenarios to Cover:
+
+Happy path (success cases)
+Validation errors (400)
+Authentication errors (401)
+Authorization errors (403)
+Not found errors (404)
+Database errors (500)
+
+
+
+Frontend Test Coverage:
+
+Component Tests: All components render correctly
+Integration Tests: User flows (register → login → purchase)
+Test Scenarios:
+
+Component rendering with props
+User interactions (clicks, form submissions)
+API integration (mocked)
+Conditional rendering
+Error states
+
+dont use comments in code 
+dont write readme after every step 
