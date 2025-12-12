@@ -79,6 +79,44 @@ describe('Auth API', () => {
       expect(response.status).toBe(400);
       expect(response.body.errors).toBeDefined();
     });
+
+    it('should return 201 and user object with hashed password on successful registration', async () => {
+      const response = await request(app)
+        .post('/api/auth/register')
+        .send({
+          email: 'test@example.com',
+          password: 'password123',
+          name: 'Test User'
+        });
+
+      expect(response.status).toBe(201);
+      expect(response.body.user).toBeDefined();
+      expect(response.body.user.email).toBe('test@example.com');
+      expect(response.body.user.name).toBe('Test User');
+      expect(response.body.user.password).toBeUndefined();
+      expect(response.body.token).toBeDefined();
+    });
+
+    it('should return 409 when email already exists', async () => {
+      await request(app)
+        .post('/api/auth/register')
+        .send({
+          email: 'test@example.com',
+          password: 'password123',
+          name: 'Test User'
+        });
+
+      const response = await request(app)
+        .post('/api/auth/register')
+        .send({
+          email: 'test@example.com',
+          password: 'password456',
+          name: 'Another User'
+        });
+
+      expect(response.status).toBe(409);
+      expect(response.body.message).toBeDefined();
+    });
   });
 });
 
