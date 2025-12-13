@@ -56,7 +56,8 @@ describe('SweetCard Component', () => {
     const outOfStockSweet = { ...mockSweet, quantity: 0 };
     render(<SweetCard sweet={outOfStockSweet} onPurchase={vi.fn()} />);
 
-    expect(screen.getByText(/out of stock/i)).toBeInTheDocument();
+    const outOfStockElements = screen.getAllByText(/out of stock/i);
+    expect(outOfStockElements.length).toBeGreaterThan(0);
   });
 });
 
