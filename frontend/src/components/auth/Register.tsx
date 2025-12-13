@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import api from '../../services/api';
+import { useAuth } from '../../context/AuthContext';
 
 interface FormErrors {
   name?: string;
@@ -11,6 +12,7 @@ interface FormErrors {
 
 const Register = () => {
   const navigate = useNavigate();
+  const { login } = useAuth();
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -60,8 +62,7 @@ const Register = () => {
     setIsLoading(true);
     try {
       const response = await api.post('/auth/register', formData);
-      localStorage.setItem('token', response.data.token);
-      localStorage.setItem('user', JSON.stringify(response.data.user));
+      login(response.data.token, response.data.user);
       navigate('/');
     } catch (error: unknown) {
       const err = error as { response?: { data?: { message?: string } } };
