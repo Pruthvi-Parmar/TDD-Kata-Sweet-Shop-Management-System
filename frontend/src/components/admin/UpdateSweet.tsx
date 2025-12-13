@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import api from '../../services/api';
-import { Sweet } from '../../types';
+import type { Sweet } from '../../types';
 
 interface FormErrors {
   name?: string;

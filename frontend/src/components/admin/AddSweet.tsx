@@ -12,9 +12,10 @@ interface FormErrors {
 
 interface AddSweetProps {
   onSuccess: () => void;
+  onCancel?: () => void;
 }
 
-const AddSweet = ({ onSuccess }: AddSweetProps) => {
+const AddSweet = ({ onSuccess, onCancel }: AddSweetProps) => {
   const [formData, setFormData] = useState({
     name: '',
     description: '',
@@ -155,9 +156,16 @@ const AddSweet = ({ onSuccess }: AddSweetProps) => {
           {errors.quantity && <span className="field-error">{errors.quantity}</span>}
         </div>
 
-        <button type="submit" disabled={isLoading} className="btn-primary">
-          {isLoading ? 'Adding...' : 'Add Sweet'}
-        </button>
+        <div className="form-actions">
+          <button type="submit" disabled={isLoading} className="btn-primary">
+            {isLoading ? 'Adding...' : 'Add Sweet'}
+          </button>
+          {onCancel && (
+            <button type="button" onClick={onCancel} className="btn-secondary">
+              Cancel
+            </button>
+          )}
+        </div>
       </form>
     </div>
   );
