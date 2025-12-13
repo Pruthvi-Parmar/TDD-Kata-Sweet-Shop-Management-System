@@ -8,7 +8,8 @@ const app: Application = express();
 const allowedOrigins = [
   'http://localhost:3000',
   'http://localhost:5173',
-  'https://tdd-kata-sweet-shop-management-syst.vercel.app'
+  'https://tdd-kata-sweet-shop-management-syst.vercel.app',
+  'https://sweet-tdd-incubyte.iampruthvi.tech'
 ];
 
 app.use(cors({
