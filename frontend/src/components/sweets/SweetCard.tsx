@@ -1,4 +1,4 @@
-import { Sweet } from '../../types';
+import type { Sweet } from '../../types';
 
 interface SweetCardProps {
   sweet: Sweet;

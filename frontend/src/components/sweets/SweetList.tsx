@@ -1,9 +1,13 @@
 import { useState, useEffect } from 'react';
 import api from '../../services/api';
-import { Sweet } from '../../types';
+import type { Sweet } from '../../types';
 import SweetCard from './SweetCard';
 
-const SweetList = () => {
+interface SweetListProps {
+  searchParams?: { search: string; category: string };
+}
+
+const SweetList = ({ searchParams }: SweetListProps) => {
   const [sweets, setSweets] = useState<Sweet[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -11,7 +15,12 @@ const SweetList = () => {
   const fetchSweets = async () => {
     try {
       setIsLoading(true);
-      const response = await api.get('/sweets');
+      const params = new URLSearchParams();
+      if (searchParams?.search) params.append('name', searchParams.search);
+      if (searchParams?.category) params.append('category', searchParams.category);
+      
+      const url = params.toString() ? `/sweets/search?${params}` : '/sweets';
+      const response = await api.get(url);
       setSweets(response.data.sweets);
       setError(null);
     } catch {
@@ -23,7 +32,7 @@ const SweetList = () => {
 
   useEffect(() => {
     fetchSweets();
-  }, []);
+  }, [searchParams?.search, searchParams?.category]);
 
   const handlePurchase = async (id: string) => {
     try {
