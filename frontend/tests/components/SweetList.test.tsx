@@ -74,7 +74,7 @@ describe('SweetList Component', () => {
     render(<SweetList />);
 
     await waitFor(() => {
-      expect(screen.getByText(/error/i)).toBeInTheDocument();
+      expect(screen.getByText(/failed to load/i)).toBeInTheDocument();
     });
   });
 });
