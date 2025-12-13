@@ -1,0 +1,71 @@
+
+> sweet-shop-backend@1.0.0 test
+> jest --runInBand --detectOpenHandles
+
+PASS tests/integration/sweets.test.ts (14.83 s)
+  Sweets API
+    POST /api/sweets
+      ✓ should return 401 without authentication token (404 ms)
+      ✓ should return 401 with invalid token (190 ms)
+      ✓ should return 400 when required fields are missing (187 ms)
+      ✓ should return 201 and created sweet on successful creation (209 ms)
+      ✓ should return 400 when price is negative (183 ms)
+      ✓ should return 400 when quantity is negative (183 ms)
+    GET /api/sweets
+      ✓ should return empty array when no sweets exist (197 ms)
+      ✓ should return array of all sweets (259 ms)
+      ✓ should not require authentication (198 ms)
+    GET /api/sweets/search
+      ✓ should filter sweets by name (262 ms)
+      ✓ should filter sweets by category (258 ms)
+      ✓ should filter sweets by price range (255 ms)
+      ✓ should combine multiple filters (264 ms)
+      ✓ should return empty array when no matches found (282 ms)
+    PUT /api/sweets/:id
+      ✓ should return 401 without authentication (204 ms)
+      ✓ should return 404 when sweet does not exist (235 ms)
+      ✓ should update sweet and return updated object (218 ms)
+      ✓ should return 400 when updating with invalid price (208 ms)
+    DELETE /api/sweets/:id
+      ✓ should return 401 without authentication (511 ms)
+      ✓ should return 403 for non-admin users (513 ms)
+      ✓ should return 404 when sweet does not exist (545 ms)
+      ✓ should delete sweet successfully for admin users (542 ms)
+    POST /api/sweets/:id/purchase
+      ✓ should return 401 without authentication (203 ms)
+      ✓ should decrease quantity by 1 on purchase (231 ms)
+      ✓ should return 404 when sweet does not exist (225 ms)
+      ✓ should return 400 when sweet is out of stock (235 ms)
+      ✓ should decrease quantity by specified amount (230 ms)
+      ✓ should return 400 when requested quantity exceeds stock (217 ms)
+    POST /api/sweets/:id/restock
+      ✓ should return 401 without authentication (493 ms)
+      ✓ should return 403 for non-admin users (494 ms)
+      ✓ should increase quantity for admin users (537 ms)
+      ✓ should return 404 when sweet does not exist (514 ms)
+      ✓ should return 400 when quantity is not provided (517 ms)
+      ✓ should return 400 when quantity is negative (524 ms)
+
+PASS tests/integration/auth.test.ts
+  Auth API
+    POST /api/auth/register
+      ✓ should return 400 when email is missing (168 ms)
+      ✓ should return 400 when password is missing (26 ms)
+      ✓ should return 400 when name is missing (17 ms)
+      ✓ should return 400 when email format is invalid (18 ms)
+      ✓ should return 400 when password is too short (19 ms)
+      ✓ should return 201 and user object with hashed password on successful registration (176 ms)
+      ✓ should return 409 when email already exists (193 ms)
+    POST /api/auth/login
+      ✓ should return 400 when email is missing (22 ms)
+      ✓ should return 400 when password is missing (19 ms)
+      ✓ should return 401 when user does not exist (32 ms)
+      ✓ should return 401 when password is incorrect (306 ms)
+      ✓ should return 200 with JWT token on successful login (293 ms)
+      ✓ should return valid JWT token that can be decoded (297 ms)
+
+Test Suites: 2 passed, 2 total
+Tests:       47 passed, 47 total
+Snapshots:   0 total
+Time:        18.763 s
+Ran all test suites.

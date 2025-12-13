@@ -1,0 +1,88 @@
+
+> frontend@0.0.0 test
+> vitest run
+
+
+ RUN  v4.0.15 /Users/prithvi/Desktop/incutestversion2/frontend
+
+ ✓ tests/components/SweetList.test.tsx (4 tests) 98ms
+ ❯ tests/components/Register.test.tsx (5 tests | 5 failed) 69ms
+     × should render form with all fields 47ms
+     × should show validation error when fields are empty 3ms
+     × should show validation error when email is empty 11ms
+     × should show validation error for short password 3ms
+     × should have link to login page 3ms
+ ❯ tests/components/Login.test.tsx (4 tests | 4 failed) 73ms
+     × should render form with email and password fields 45ms
+     × should show validation error when email is empty 6ms
+     × should show validation error when password is empty 17ms
+     × should have link to register page 3ms
+ ✓ tests/components/SweetCard.test.tsx (5 tests) 704ms
+     ✓ should have purchase button when in stock  440ms
+ ✓ tests/components/UpdateSweet.test.tsx (6 tests) 967ms
+     ✓ should have update and cancel buttons  343ms
+ ✓ tests/components/AddSweet.test.tsx (4 tests) 1160ms
+     ✓ should render form with all required fields  431ms
+     ✓ should submit form and call onSuccess on success  365ms
+ ✓ tests/components/SearchBar.test.tsx (4 tests) 1384ms
+     ✓ should render search input and category filter  538ms
+     ✓ should call onSearch with search term when typing  434ms
+     ✓ should call onSearch with category when selecting  358ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 9 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/components/Login.test.tsx > Login Component > should render form with email and password fields
+ FAIL  tests/components/Login.test.tsx > Login Component > should show validation error when email is empty
+ FAIL  tests/components/Login.test.tsx > Login Component > should show validation error when password is empty
+ FAIL  tests/components/Login.test.tsx > Login Component > should have link to register page
+Error: useAuth must be used within AuthProvider
+ ❯ useAuth src/context/AuthContext.tsx:66:11
+     64|   const context = useContext(AuthContext);
+     65|   if (!context) {
+     66|     throw new Error('useAuth must be used within AuthProvider');
+       |           ^
+     67|   }
+     68|   return context;
+ ❯ Login src/components/auth/Login.tsx:14:21
+ ❯ Object.react_stack_bottom_frame node_modules/react-dom/cjs/react-dom-client.development.js:25904:20
+ ❯ renderWithHooks node_modules/react-dom/cjs/react-dom-client.development.js:7662:22
+ ❯ updateFunctionComponent node_modules/react-dom/cjs/react-dom-client.development.js:10166:19
+ ❯ beginWork node_modules/react-dom/cjs/react-dom-client.development.js:11778:18
+ ❯ runWithFiberInDEV node_modules/react-dom/cjs/react-dom-client.development.js:874:13
+ ❯ performUnitOfWork node_modules/react-dom/cjs/react-dom-client.development.js:17641:22
+ ❯ workLoopSync node_modules/react-dom/cjs/react-dom-client.development.js:17469:41
+ ❯ renderRootSync node_modules/react-dom/cjs/react-dom-client.development.js:17450:11
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/9]⎯
+
+ FAIL  tests/components/Register.test.tsx > Register Component > should render form with all fields
+ FAIL  tests/components/Register.test.tsx > Register Component > should show validation error when fields are empty
+ FAIL  tests/components/Register.test.tsx > Register Component > should show validation error when email is empty
+ FAIL  tests/components/Register.test.tsx > Register Component > should show validation error for short password
+ FAIL  tests/components/Register.test.tsx > Register Component > should have link to login page
+Error: useAuth must be used within AuthProvider
+ ❯ useAuth src/context/AuthContext.tsx:66:11
+     64|   const context = useContext(AuthContext);
+     65|   if (!context) {
+     66|     throw new Error('useAuth must be used within AuthProvider');
+       |           ^
+     67|   }
+     68|   return context;
+ ❯ Register src/components/auth/Register.tsx:15:21
+ ❯ Object.react_stack_bottom_frame node_modules/react-dom/cjs/react-dom-client.development.js:25904:20
+ ❯ renderWithHooks node_modules/react-dom/cjs/react-dom-client.development.js:7662:22
+ ❯ updateFunctionComponent node_modules/react-dom/cjs/react-dom-client.development.js:10166:19
+ ❯ beginWork node_modules/react-dom/cjs/react-dom-client.development.js:11778:18
+ ❯ runWithFiberInDEV node_modules/react-dom/cjs/react-dom-client.development.js:874:13
+ ❯ performUnitOfWork node_modules/react-dom/cjs/react-dom-client.development.js:17641:22
+ ❯ workLoopSync node_modules/react-dom/cjs/react-dom-client.development.js:17469:41
+ ❯ renderRootSync node_modules/react-dom/cjs/react-dom-client.development.js:17450:11
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/9]⎯
+
+
+ Test Files  2 failed | 5 passed (7)
+      Tests  9 failed | 23 passed (32)
+   Start at  03:01:35
+   Duration  3.41s (transform 822ms, setup 1.17s, import 3.61s, tests 4.46s, environment 8.13s)
+
