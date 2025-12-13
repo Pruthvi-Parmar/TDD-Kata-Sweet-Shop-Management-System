@@ -5,6 +5,7 @@ A full-stack Sweet Shop Management System built with **strict Test-Driven Develo
 ## 📋 Table of Contents
 
 - [Overview](#overview)
+- [Live Demo](#live-demo)
 - [Tech Stack](#tech-stack)
 - [Features](#features)
 - [Project Structure](#project-structure)
@@ -24,6 +25,28 @@ This Sweet Shop Management System allows users to:
 - Admin users can add, update, delete sweets and manage inventory
 
 The entire project was built following **strict TDD principles** with 46 commits demonstrating the RED-GREEN-REFACTOR cycle.
+
+## 🌐 Live Demo
+
+The application is live and ready to use!
+
+**🔗 Live Application:** [https://tdd-kata-sweet-shop-management-syst.vercel.app/](https://tdd-kata-sweet-shop-management-syst.vercel.app/)
+
+### Deployment
+- **Frontend:** Deployed on [Vercel](https://vercel.com/)
+- **Backend:** Deployed on [Render](https://render.com/)
+
+### Test Credentials
+
+To test the admin features, you can use the following credentials:
+
+**Admin Account:**
+- **Email:** `admin@sweetshop.com`
+- **Password:** `admin123`
+
+> ⚠️ **Note:** This is a demo account. Please use responsibly and do not modify critical data.
+
+You can also register a new account to test the regular user features.
 
 ## 🛠 Tech Stack
 
