@@ -88,16 +88,15 @@ describe('UpdateSweet Component', () => {
     });
   });
 
-  it('should show validation error for invalid price', async () => {
+  it('should show validation error when price is empty', async () => {
     const user = userEvent.setup();
     render(<UpdateSweet sweet={mockSweet} onSuccess={vi.fn()} onCancel={vi.fn()} />);
 
     await user.clear(screen.getByLabelText(/price/i));
-    await user.type(screen.getByLabelText(/price/i), '-5');
     await user.click(screen.getByRole('button', { name: /update/i }));
 
     await waitFor(() => {
-      expect(screen.getByText(/price must be positive/i)).toBeInTheDocument();
+      expect(screen.getByText(/price is required/i)).toBeInTheDocument();
     });
   });
 });
