@@ -13,6 +13,7 @@ A full-stack Sweet Shop Management System built with **strict Test-Driven Develo
 - [Testing](#testing)
 - [TDD Approach](#tdd-approach)
 - [Commit History](#commit-history)
+- [My AI Usage](#my-ai-usage)
 
 ## 🎯 Overview
 
@@ -412,10 +413,80 @@ Total Commits: **46**
 - Total Tests: **79 passing**
 - Test Coverage: 80%+
 
+## 🤖 My AI Usage
+
+### AI Tools Used
+
+I used **Claude Opus** as a coding companion throughout this project. AI assistance was integrated into my workflow for various tasks—from generating boilerplate code to debugging complex issues and getting architectural feedback.
+
+### How I Used AI
+
+I maintained control over all architectural decisions and final implementations, while leveraging AI as a collaborative tool. Here's how AI assisted me across different aspects of the project:
+
+#### 1. **Project Setup & Configuration**
+- **Project Structure**: I designed the overall architecture, and AI helped generate the initial folder structure with proper separation of concerns (repositories, services, controllers, middleware).
+- **Configuration Files**: AI generated TypeScript, Jest, and Vite configuration files based on my requirements. I then reviewed and customized them to match my specific needs.
+
+#### 2. **Test-Driven Development**
+- **Writing Tests**: For complex test scenarios (authentication flows, edge cases), I asked AI to generate test cases covering various scenarios. I reviewed and adapted them to ensure they matched my requirements.
+- **Test Implementation**: When implementing features to make tests pass, AI generated initial implementations. I reviewed, understood, and often refactored the code to align with my coding style and project structure.
+
+#### 3. **Backend Implementation**
+- **Repository Pattern**: I designed the architecture, and AI generated the repository layer implementation with TypeScript interfaces. I reviewed and adjusted it to fit my needs.
+- **Service Layer**: AI generated service implementations for authentication, sweet management, and inventory operations. I ensured they followed SOLID principles and adapted them as needed.
+- **Middleware**: AI generated authentication, validation, and error handling middleware. I reviewed the code, understood the logic, and integrated it into my application.
+- **Database Schema**: I designed the data models, and AI helped generate Mongoose schemas with proper validation and indexes.
+
+#### 4. **Frontend Development**
+- **React Components**: Claude helped significantly in building a simple, working frontend. AI generated React components with TypeScript typing and form validation. I reviewed each component, understood the implementation, and integrated them into my application.
+- **State Management**: AI helped generate the AuthContext implementation. I reviewed it, understood the state management flow, and integrated it with my components.
+- **API Integration**: AI generated the Axios service layer with interceptors. I reviewed and customized it for my specific API requirements.
+- **Overall Frontend**: Claude was particularly helpful in getting the frontend up and running quickly, generating working components that I could then review, understand, and adapt to create a functional user interface.
+
+#### 5. **Debugging & Problem Solving**
+- **MongoDB Index Issues**: When encountering the `E11000 duplicate key error`, I asked AI to help diagnose and generate a solution for handling stale indexes. I reviewed the solution and implemented it.
+- **CORS Configuration**: AI helped generate CORS configuration for both development and production. I reviewed and adjusted it for my deployment setup.
+- **TypeScript Errors**: When facing complex TypeScript errors, I asked AI to explain the errors and generate fixes. I then reviewed and implemented the solutions.
+
+#### 6. **Documentation & Git**
+- **Commit Messages**: I wrote commit messages following conventional commit standards. AI occasionally helped refine them for clarity.
+- **README**: I structured the README, and AI helped generate comprehensive documentation sections. I reviewed and customized the content to accurately reflect the project.
+
+### Reflection on AI Usage
+
+#### My Approach
+
+I used AI as a **collaborative coding partner** while maintaining ownership of all decisions. My typical workflow was:
+
+1. **Planning**: I planned features and architecture myself
+2. **AI Generation**: I asked AI to generate code for specific tasks
+3. **Review & Understanding**: I carefully reviewed all AI-generated code to understand it
+4. **Adaptation**: I adapted AI code to match my style, project structure, and requirements
+5. **Final Decision**: I made all final decisions on what to implement and how
+
+#### Benefits
+
+- **Productivity**: AI accelerated development by generating boilerplate code, allowing me to focus on business logic and problem-solving
+- **Code Quality**: AI-generated code often followed best practices, which I learned from and applied
+- **Learning**: By reviewing AI-generated code, I learned new patterns and approaches (error handling, middleware composition, TypeScript patterns)
+- **Debugging**: AI quickly helped identify root causes of complex issues, saving debugging time
+- **Consistency**: AI helped maintain consistent code style and structure across the project
+
+#### Challenges & Learnings
+
+- **Code Understanding**: I had to ensure I fully understood all AI-generated code before using it. Sometimes I rewrote sections in my own style to ensure comprehension.
+- **Over-Reliance**: I consciously balanced using AI assistance with solving problems myself to maintain learning and ownership.
+- **Context Management**: Providing clear context to AI was crucial. This process helped me think through problems more clearly.
+- **Review Process**: Every piece of AI-generated code went through review, testing, and often refactoring to ensure it met my standards.
+
+#### Key Takeaway
+
+AI served as a valuable **pair-programming partner** that accelerated development while I maintained control and understanding of the codebase. The most important aspect was the **review and adaptation process**—ensuring I understood every piece of code before integrating it. This approach allowed me to learn while building, leveraging AI's capabilities while maintaining ownership and comprehension of the entire project.
+
 ## 👥 Contributors
 
 - Developer with AI assistance
-- Co-authored-by: Cursor AI
+- Co-authored-by: Claude Opus <claude@anthropic.com>
 
 ## 📄 License
 
