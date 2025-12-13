@@ -5,7 +5,16 @@ import sweetsRoutes from './routes/sweetsRoutes';
 
 const app: Application = express();
 
-app.use(cors());
+const allowedOrigins = [
+  'http://localhost:3000',
+  'http://localhost:5173',
+  'https://tdd-kata-sweet-shop-management-syst.vercel.app'
+];
+
+app.use(cors({
+  origin: allowedOrigins,
+  credentials: true
+}));
 app.use(express.json());
 
 app.get('/health', (req: Request, res: Response) => {
