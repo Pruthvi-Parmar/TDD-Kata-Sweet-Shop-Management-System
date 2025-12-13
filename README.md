@@ -30,7 +30,7 @@ The entire project was built following **strict TDD principles** with 46 commits
 
 The application is live and ready to use!
 
-**🔗 Live Application:** [https://tdd-kata-sweet-shop-management-syst.vercel.app/](https://tdd-kata-sweet-shop-management-syst.vercel.app/)
+**🔗 Live Application:** [https://sweet-tdd-incubyte.iampruthvi.tech/](https://sweet-tdd-incubyte.iampruthvi.tech/)
 
 ### Deployment
 - **Frontend:** Deployed on [Vercel](https://vercel.com/)
